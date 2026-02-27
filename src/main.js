@@ -8,12 +8,9 @@ import {
 
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-import axios from "axios";
-import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 const form = document.querySelector('.form');
-const loader = document.querySelector('.loader-container');
 
 form.addEventListener("submit", async event => {
     event.preventDefault();
@@ -29,7 +26,7 @@ form.addEventListener("submit", async event => {
     } else {
         try {
             clearGallery();
-            loader.classList.remove('hidden');
+            showLoader();
             const images = await getImagesByQuery(query)
             if (images.hits.length === 0) {
                 iziToast.warning({
@@ -40,9 +37,12 @@ form.addEventListener("submit", async event => {
                 createGallery(images.hits)
             }
         } catch (e) {
-
+            iziToast.warning({
+                message: "Something went wrong!",
+                position: "topRight",
+            });
         } finally {
-            loader.classList.add('hidden')
+            hideLoader();
         }
 
     }
